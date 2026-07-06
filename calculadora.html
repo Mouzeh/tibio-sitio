@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de ahorro por aislación térmica — Tibio</title>
+<meta name="description" content="Estima cuánto podrías ahorrar al año en calefacción aislando tu techo, según el tamaño de tu casa y tu gasto actual.">
+<link rel="canonical" href="https://tibio.cl/calculadora.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Calculadora de ahorro por aislación térmica — Tibio">
+<meta property="og:description" content="Estima cuánto podrías ahorrar al año en calefacción aislando tu techo.">
+<meta property="og:url" content="https://tibio.cl/calculadora.html">
+<meta property="og:locale" content="es_CL">
+<meta name="twitter:card" content="summary">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a href="index.html" class="logo">Tib<em>i</em>o</a>
+    <nav class="site">
+      <a href="calculadora.html">Calculadora de ahorro</a>
+      <a href="blog/index.html">Guías</a>
+      <a href="index.html#sobre">Sobre el sitio</a>
+    </nav>
+  </div>
+</header>
+
+<section style="padding-top:56px">
+  <div class="wrap">
+    <span class="eyebrow">Herramienta</span>
+    <h1>¿Cuánto podrías ahorrar aislando tu techo?</h1>
+    <p class="lede" style="color:var(--ink-soft); max-width:60ch; margin-bottom:36px;">
+      Una estimación simple basada en tu gasto actual de calefacción y el estado de aislación de tu casa. No reemplaza una evaluación en terreno, pero te da un número de partida.
+    </p>
+
+    <div class="calc-box">
+      <div class="calc-row">
+        <div class="calc-field">
+          <label for="m2">Superficie de tu casa (m²)</label>
+          <input type="number" id="m2" placeholder="ej. 80" min="10" max="500">
+        </div>
+        <div class="calc-field">
+          <label for="gasto">Gasto mensual en calefacción, en invierno (CLP)</label>
+          <input type="number" id="gasto" placeholder="ej. 90000" min="0">
+        </div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label for="aislacion">Estado actual de aislación</label>
+          <select id="aislacion">
+            <option value="0.30">Sin aislación</option>
+            <option value="0.15">Aislación parcial o antigua</option>
+            <option value="0.05">Buena aislación ya instalada</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label for="meses">Meses de calefacción activa al año</label>
+          <input type="number" id="meses" value="5" min="1" max="12">
+        </div>
+      </div>
+
+      <button class="btn btn-ember" onclick="calcular()" style="border:none; cursor:pointer;">Calcular ahorro estimado</button>
+
+      <div class="calc-result" id="resultado" style="display:none">
+        <div class="big-number" id="ahorroAnual">$0</div>
+        <div class="big-label">de ahorro estimado al año en calefacción</div>
+
+        <div style="margin-top:22px; display:flex; gap:40px; flex-wrap:wrap;">
+          <div>
+            <div class="big-number" style="font-size:1.4rem" id="costoEstimado">$0</div>
+            <div class="big-label">costo estimado de aislar el techo (referencial)</div>
+          </div>
+          <div>
+            <div class="big-number" style="font-size:1.4rem" id="payback">—</div>
+            <div class="big-label">años para recuperar la inversión</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="calc-disclaimer">
+        Estimación general basada en supuestos promedio (una casa sin aislación puede perder hasta 30% de su calor por el techo). No considera el estado específico de tu vivienda, tipo de calefacción, ni variaciones regionales de precio. Para una decisión de inversión, cotiza con un instalador local.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div>Tibio — Aislación térmica real para el sur de Chile</div>
+    <div><a href="blog/index.html">Guías</a> · <a href="calculadora.html">Calculadora</a></div>
+  </div>
+</footer>
+
+<script>
+function calcular(){
+  const m2 = parseFloat(document.getElementById('m2').value) || 0;
+  const gasto = parseFloat(document.getElementById('gasto').value) || 0;
+  const factorAhorro = parseFloat(document.getElementById('aislacion').value);
+  const meses = parseFloat(document.getElementById('meses').value) || 5;
+
+  const gastoAnualCalefaccion = gasto * meses;
+  const ahorroAnual = gastoAnualCalefaccion * factorAhorro;
+
+  const costoPromedioM2 = 6500; // promedio referencial material + instalación
+  const costoEstimado = m2 * costoPromedioM2;
+
+  const payback = ahorroAnual > 0 ? (costoEstimado / ahorroAnual) : 0;
+
+  document.getElementById('resultado').style.display = 'block';
+  document.getElementById('ahorroAnual').innerText = '$' + Math.round(ahorroAnual).toLocaleString('es-CL');
+  document.getElementById('costoEstimado').innerText = '$' + Math.round(costoEstimado).toLocaleString('es-CL');
+  document.getElementById('payback').innerText = payback > 0 ? (payback.toFixed(1) + ' años') : '—';
+}
+</script>
+
+</body>
+</html>
